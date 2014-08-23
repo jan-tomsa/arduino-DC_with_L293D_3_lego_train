@@ -13,6 +13,7 @@ int pin_led_green = 13;
 
 char direction1 = 'X';
 
+int blink_counter;
 
 /////////////////////////// SETUP //////////////////////////////
 void setup() {                
@@ -28,6 +29,7 @@ void setup() {
   pinMode(pin_led_green, OUTPUT);
   digitalWrite(pin_led_red,LOW);
   digitalWrite(pin_led_green,LOW);
+  blink_counter = 0;
 }
 
 /////////////////////////// LEDs //////////////////////////////
@@ -37,6 +39,21 @@ void led_red(int val) {
 
 void led_green(int val) {
   digitalWrite(pin_led_green,val);
+}
+
+
+void doBlinking() {
+  blink_counter++;
+  if (blink_counter <= 1000)  {
+    led_green(HIGH);
+    led_red(LOW);
+  } else {
+    led_green(LOW);
+    led_red(HIGH);
+  }
+  if (blink_counter > 2000) {
+    blink_counter = 0;
+  }
 }
 
 /////////////////////////// MOTOR //////////////////////////////
@@ -68,6 +85,7 @@ void goBackwardTimed(int delayInMs) {
   delay(delayInMs);
 }
 
+
 ///////////////////////////////////////////////////////////////////
 ///////////////////////  LOOP  ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
@@ -75,6 +93,7 @@ void goBackwardTimed(int delayInMs) {
 void loop() {
   if (direction1 == 'X') {
     stopMotor1();
+    doBlinking();
   }
   if (direction1 == 'F') {
     goForward();
@@ -99,6 +118,7 @@ void loop() {
     direction1 = 'X';
     led_red(HIGH);
     led_green(HIGH);
+    delay(1000);   // wait 1 second to allow stopping the train
   }
 }
 
